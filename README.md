@@ -49,4 +49,11 @@ Assim, o ambiente estará devidamento configurado. Para subir o sistema, rode o 
 poetry run python manage.py runserver
 ```
 Com isso, o sistema estará rodando na seguinte URL: http://127.0.0.1:8000 \
-Para acessar o Django admin, onde poderá visualizar os objetos do banco e, também, será possível modifica-los manualmente, basta acessar, logando com o usuário criado anteriormente, a URL: [127.0.0.1:8000/admin/](127.0.0.1:8000/admin/).
+Para acessar o Django admin, onde poderá visualizar os objetos do banco e, também, será possível modifica-los manualmente, basta acessar, logando com o usuário criado anteriormente, a URL: http://127.0.0.1:8000/admin/.
+
+## Lista de endpoints
+
+| Endpoint        | Método | Descrição                                                                                                                                                |
+|-----------------|--------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `/api/token/`   | POST   | **Descrição:** Endpoint de geração de token(Login).<br/>**Parâmetros:** `username`/`email`, `password`<br/>**Response:** `access_token`, `refresh_token` |
+| `/api/refresh/` | POST   | **Descrição:** Endpoint de atualização de `access_token` através do `refresh_token`.<br/>**Parâmetros:**`refresh_token`<br/>**Response:** `access_token` |
