@@ -53,7 +53,9 @@ Para acessar o Django admin, onde poderá visualizar os objetos do banco e, tamb
 
 ## Lista de endpoints
 
-| Endpoint        | Método | Descrição                                                                                                                                                |
-|-----------------|--------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `/api/token/`   | POST   | **Descrição:** Endpoint de geração de token(Login).<br/>**Parâmetros:** `username`/`email`, `password`<br/>**Response:** `access_token`, `refresh_token` |
-| `/api/refresh/` | POST   | **Descrição:** Endpoint de atualização de `access_token` através do `refresh_token`.<br/>**Parâmetros:**`refresh_token`<br/>**Response:** `access_token` |
+| Endpoint              | Método | Descrição                                                                                                                                                                                                                                                                 |
+|-----------------------|--------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `/api/token/`         | POST   | **Descrição:** Endpoint de geração de token(Login).<br/>**Parâmetros:** `username`/`email`, `password`<br/>**Response:** `access_token`, `refresh_token`                                                                                                                  |
+| `/api/refresh/`       | POST   | **Descrição:** Endpoint de atualização de `access_token` através do `refresh_token`.<br/>**Parâmetros:**`refresh_token`<br/>**Response:** `access_token`                                                                                                                  |
+| `/api/user/register/` | POST   | **Descrição:** Endpoint de criação de usuário.<br/>**Parâmetros:** `email`, `username`, `password`, `password_confirmation`, `first_name`(Não Obrigatório!), `last_name`(Não Obrigatório!)<br/>**Response:** Todos os dados não sensíveis do usuário criado.              |
+| `/api/user/<pk>/`     | GET    | **Descrição:** Endpoint de captura de usuário. É necessário estar logado, ou seja, passar um token no header, para poder ser servido por este endpoint.<br/>**Parâmetros:** `pk`(Id do usuário passado na URL)<br/>**Response:** Todos os dados não sensíveis do usuário. |
