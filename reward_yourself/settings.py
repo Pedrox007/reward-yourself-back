@@ -32,22 +32,23 @@ ALLOWED_HOSTS = ["*"]
 # Application definition
 
 DEFAULT_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
 ]
 
 EXTERNAL_APPS = [
-    'rest_framework',
-    'corsheaders',
-    'rest_framework_simplejwt'
+    "rest_framework",
+    "corsheaders",
+    "rest_framework_simplejwt",
+    "django_filters"
 ]
 
 LOCAL_APPS = [
-    'core',
+    "core",
 ]
 
 INSTALLED_APPS = LOCAL_APPS + EXTERNAL_APPS + DEFAULT_APPS
@@ -86,10 +87,15 @@ WSGI_APPLICATION = 'reward_yourself.wsgi.application'
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema",
     "DEFAULT_PAGINATION_CLASS": "core.utils.FilterPagination",
+    "DEFAULT_FILTER_BACKENDS": [
+        "django_filters.rest_framework.DjangoFilterBackend",
+        "rest_framework.filters.OrderingFilter",
+        "rest_framework.filters.SearchFilter",
+    ],
     "PAGE_SIZE": 100,
 }
 

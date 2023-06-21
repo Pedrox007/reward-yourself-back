@@ -1,12 +1,11 @@
-from django.contrib.auth import authenticate
 from django.contrib.auth.models import update_last_login
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import exceptions, serializers
-from rest_framework.settings import api_settings
+from rest_framework.serializers import ModelSerializer
 from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, PasswordField
 
-from core.models import User
+from core.models import User, Task
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -88,3 +87,11 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
+
+
+class TaskSerializer(ModelSerializer):
+    user_id = serializers.PrimaryKeyRelatedField(source="user", queryset=User.objects.all())
+
+    class Meta:
+        model = Task
+        exclude = ("user",)
