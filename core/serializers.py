@@ -5,7 +5,7 @@ from rest_framework.serializers import ModelSerializer
 from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, PasswordField
 
-from core.models import User, Task
+from core.models import User, Task, Reward
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -94,4 +94,12 @@ class TaskSerializer(ModelSerializer):
 
     class Meta:
         model = Task
+        exclude = ("user",)
+
+
+class RewardSerializer(ModelSerializer):
+    user_id = serializers.PrimaryKeyRelatedField(source="user", queryset=User.objects.all())
+
+    class Meta:
+        model = Reward
         exclude = ("user",)

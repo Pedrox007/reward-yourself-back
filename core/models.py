@@ -36,3 +36,20 @@ class Task(AutoTimestamp):
     class Meta:
         verbose_name = "Task"
         verbose_name_plural = "Tasks"
+
+
+class Reward(AutoTimestamp):
+    title = models.CharField("Title", max_length=200)
+    description = models.TextField("Description", blank=True, null=True)
+    duration = models.DurationField("Duration")
+    cost = models.PositiveIntegerField("Cost", default=0)
+    user = models.ForeignKey(
+        "core.User",
+        verbose_name="User",
+        on_delete=models.CASCADE,
+        default=User.objects.get(username="admin").id
+    )
+
+    class Meta:
+        verbose_name = "Reward"
+        verbose_name_plural = "Rewards"

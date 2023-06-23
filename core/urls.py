@@ -2,13 +2,14 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenRefreshView
 
-from core.views import MyTokenObtainPairView, UserRegisterView, UserRetrieveView, TaskViewSet
+from core.views import MyTokenObtainPairView, UserRegisterView, UserRetrieveView, TaskViewSet, RewardViewSet
 
 app_name = "core"
 
 router = DefaultRouter()
 
 router.register("tasks", TaskViewSet)
+router.register("rewards", RewardViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),
