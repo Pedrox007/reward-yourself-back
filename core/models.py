@@ -30,7 +30,8 @@ class Task(AutoTimestamp):
         User,
         verbose_name="User",
         on_delete=models.CASCADE,
-        default=User.objects.get(username="admin").id
+        null=True,
+        default=None
     )
 
     class Meta:
@@ -47,7 +48,8 @@ class Reward(AutoTimestamp):
         User,
         verbose_name="User",
         on_delete=models.CASCADE,
-        default=User.objects.get(username="admin").id
+        null=True,
+        default=None
     )
 
     class Meta:
