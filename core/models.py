@@ -27,10 +27,11 @@ class Task(AutoTimestamp):
     fixed = models.BooleanField("Fixed", default=False)
     finished = models.BooleanField("Finished", default=False)
     user = models.ForeignKey(
-        "core.User",
+        User,
         verbose_name="User",
         on_delete=models.CASCADE,
-        default=User.objects.get(username="admin").id
+        null=True,
+        default=None
     )
 
     class Meta:
@@ -44,10 +45,11 @@ class Reward(AutoTimestamp):
     duration = models.DurationField("Duration")
     cost = models.PositiveIntegerField("Cost", default=0)
     user = models.ForeignKey(
-        "core.User",
+        User,
         verbose_name="User",
         on_delete=models.CASCADE,
-        default=User.objects.get(username="admin").id
+        null=True,
+        default=None
     )
 
     class Meta:
