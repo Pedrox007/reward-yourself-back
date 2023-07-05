@@ -41,7 +41,9 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
                 data = {
                     "refresh": str(refresh),
-                    "access": str(refresh.access_token)
+                    "access": str(refresh.access_token),
+                    "name": str(self.user.first_name),
+                    "id": str(self.user.id)
                 }
 
                 update_last_login(None, self.user)
