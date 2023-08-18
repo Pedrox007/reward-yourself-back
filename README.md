@@ -1,15 +1,19 @@
-# reward-yourself-back
+# REWARD-YOURSELF-BACK
+
+_Ver `SETUP_VERCEL` para detalhes de implementação no Host da Vercel com Banco de Dados da Railway App_
+
 ## Requerimentos:
 
-* Python 3.8
-* Poetry 1.5.1
-* MySQL 8.0.33-0
+- Python 3.8
+- Poetry 1.5.1
+- MySQL 8.0.33-0
 
 ## Configuração de ambiente
 
-Primeiramente, é necessário criar um banco vazio no MySQL(Sugestão de nome: `reward_yourself`). 
+Primeiramente, é necessário criar um banco vazio no MySQL(Sugestão de nome: `reward_yourself`).
 Após criar o banco, crie um arquivo python chamado `local_settings` na pasta `/reward_yourself` do projeto.
 Esse arquivo será o que irá conter as variáveis de ambiente do sistema. Copie e cole as seguintes variáveis neste arquivo, substituindo os valores entre `<>` para os valores que você possui.
+
 ```python
 DEBUG = True
 SECRET_KEY = "<Sua SECRET_KEY>"
@@ -27,34 +31,50 @@ DATABASES = {
     }
 }
 ```
+
 Após isso, na raiz do projeto, rode o seguinte comando para criar o virtual environment:
+
 ```shell
 poetry install
 ```
+
 Com isso, o Poetry irá instalar todos os pacotes necessários para rodar o projeto. Neste momento é necessário rodar as migrações para a criação das tabelas e relacionamentos do banco. Para isso, rode o seguinte comando:
+
 ```shell
 poetry run python manage.py migrate
 ```
+
 Para criar um usuário administrador, rode o seguinte comando:
+
 ```shell
 poetry run python manage.py loaddata user_admin
 ```
+
 O usuário terá as seguintes credenciais:
-* **username:** admin
-* **password:** qwert123
-* **email:** admin@admin.com
+
+- **username:** admin
+- **password:** qwert123
+- **email:** admin@admin.com
 
 Assim, o ambiente estará devidamento configurado. Para subir o sistema, rode o seguinte comando:
+
 ```shell
 poetry run python manage.py runserver
 ```
+
+Para gerar um arquivo de requirements:
+
+```shell
+poetry run pip freeze --exclude-editable > requirements.txt
+```
+
 Com isso, o sistema estará rodando na seguinte URL: http://127.0.0.1:8000 \
 Para acessar o Django admin, onde poderá visualizar os objetos do banco e, também, será possível modifica-los manualmente, basta acessar, logando com o usuário criado anteriormente, a URL: http://127.0.0.1:8000/admin/.
 
 ## Lista de endpoints
 
 | Endpoint                  | Método | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-|---------------------------|--------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `/api/token/`             | POST   | **Descrição:** Endpoint de geração de token(Login).<br/>**Parâmetros:** `username`/`email`, `password`<br/>**Response:** `access_token`, `refresh_token`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | `/api/refresh/`           | POST   | **Descrição:** Endpoint de atualização de `access_token` através do `refresh_token`.<br/>**Parâmetros:**`refresh_token`<br/>**Response:** `access_token`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | `/api/users/register/`    | POST   | **Descrição:** Endpoint de criação do User.<br/>**Parâmetros:** <br/>`email`; <br/>`username`; <br/>`password`; <br/>`password_confirmation`; <br/>`first_name`(Não Obrigatório!); <br/>`last_name`(Não Obrigatório!);<br/>**Response:** Todos os dados não sensíveis do usuário criado.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
@@ -62,8 +82,8 @@ Para acessar o Django admin, onde poderá visualizar os objetos do banco e, tamb
 | `/api/tasks/`             | GET    | **Descrição:** Endpoint de listagem de Tasks. Só irá ser retornado as Tasks do usuário passado pelo token de acesso. Caso seja SuperUser, irá ser retornado tudo. O endpoint possui paginação.<br/> **Parâmetros:**<br/> `finished`: Booleano; <br/>`fixed`: Booleano; <br/>`search`: String de pesquisa sobre os campos `title` e `description`;<br/>`ordering`: Indicação do campo que deseja que o response seja ordenado. Pode receber os campos `finished`, `fixed` e `coin_reward`. Caso seja passado "-" como prefixo do campo, ele irá ordenar de maneira inversa;<br/>`page`: Página da listagem;<br/>`page_size`: Tamanho desejado para a paginação da listagem;<br/> **Response:**<br/> `links`: Links das páginas posterior e anterior caso haja;<br/> `count`: Quantidade total de objetos da listagem; <br/>`total_pages`: Quantidade total de páginas;<br/> `results`: Lista de Tasks da página; |
 | `/api/tasks/<pk>/`        | GET    | **Descrição:** Endpoint de captura de Task.<br/> **Parâmetros:** <br/>`pk`: Id da Task passado na URL;<br/> **Response:** Todos os dados da Task.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | `/api/tasks/`             | POST   | **Descrição:** Endpoint de criação de Task.<br/> **Parâmetros:**<br/>`title`: Título curto da Task;<br/> `description`: Descrição detalhada da Task;<br/> `expected_duration`: Duração esperada da Task em segundos;<br/> `final_duration`: Duração final da Task em segundos;<br/>`coin_reward`: Inteiro positivo indicando a recompensa em moedas ao finalizar a Task;<br/>`fixed`: Booleano indicando se é uma Task fixa;<br/>`finished`: Booaleano indicando se a Task foi finalizada;<br/>`user`: Id do usuário ao qual a Task irá ser atrelada;<br/>**Response:** Todos os dados da Task criada.                                                                                                                                                                                                                                                                                                          |
-| `/api/tasks/<pk>/`        | PUT    | **Descrição:** Endpoint de atualização de Task. É necessário passar todos os dados da Task, mesmo os que não serão atualizados.<br/>  **Parâmetros:**<br/>`pk`: Id da Task passado na URL<br/> `title`: Título curto da Task;<br/> `description`: Descrição detalhada da Task;<br/> `expected_duration`: Duração esperada da Task em segundos;<br/> `final_duration`: Duração final da Task em segundos;<br/>`coin_reward`: Inteiro positivo indicando a recompensa em moedas ao finalizar a Task;<br/>`fixed`: Booleano indicando se é uma Task fixa;<br/>`finished`: Booaleano indicando se a Task foi finalizada;<br/>`user`: Id do usuário ao qual a Task irá ser atrelada;<br/>**Response:** Todos os dados da Task atualizada.                                                                                                                                                                            |
-| `/api/tasks/<pk>/`        | PATCH  | **Descrição:** Endpoint de atualização de Task. Não é necessário passar todos os dados da Task, apenas os que serão atualizados.<br/>  **Parâmetros:**<br/>`pk`: Id da Task passado na URL:<br/> `title`: Título curto da Task;<br/> `description`: Descrição detalhada da Task;<br/> `expected_duration`: Duração esperada da Task em segundos;<br/> `final_duration`: Duração final da Task em segundos;<br/>`coin_reward`: Inteiro positivo indicando a recompensa em moedas ao finalizar a Task;<br/>`fixed`: Booleano indicando se é uma Task fixa;<br/>`finished`: Booaleano indicando se a Task foi finalizada;<br/>`user`: Id do usuário ao qual a Task irá ser atrelada;<br/>**Response:** Todos os dados da Task atualizada.                                                                                                                                                                          |
+| `/api/tasks/<pk>/`        | PUT    | **Descrição:** Endpoint de atualização de Task. É necessário passar todos os dados da Task, mesmo os que não serão atualizados.<br/> **Parâmetros:**<br/>`pk`: Id da Task passado na URL<br/> `title`: Título curto da Task;<br/> `description`: Descrição detalhada da Task;<br/> `expected_duration`: Duração esperada da Task em segundos;<br/> `final_duration`: Duração final da Task em segundos;<br/>`coin_reward`: Inteiro positivo indicando a recompensa em moedas ao finalizar a Task;<br/>`fixed`: Booleano indicando se é uma Task fixa;<br/>`finished`: Booaleano indicando se a Task foi finalizada;<br/>`user`: Id do usuário ao qual a Task irá ser atrelada;<br/>**Response:** Todos os dados da Task atualizada.                                                                                                                                                                             |
+| `/api/tasks/<pk>/`        | PATCH  | **Descrição:** Endpoint de atualização de Task. Não é necessário passar todos os dados da Task, apenas os que serão atualizados.<br/> **Parâmetros:**<br/>`pk`: Id da Task passado na URL:<br/> `title`: Título curto da Task;<br/> `description`: Descrição detalhada da Task;<br/> `expected_duration`: Duração esperada da Task em segundos;<br/> `final_duration`: Duração final da Task em segundos;<br/>`coin_reward`: Inteiro positivo indicando a recompensa em moedas ao finalizar a Task;<br/>`fixed`: Booleano indicando se é uma Task fixa;<br/>`finished`: Booaleano indicando se a Task foi finalizada;<br/>`user`: Id do usuário ao qual a Task irá ser atrelada;<br/>**Response:** Todos os dados da Task atualizada.                                                                                                                                                                           |
 | `/api/tasks/<pk>/`        | DELETE | **Descrição:** Endpoint de remoção de Task.<br/> **Parâmetros:**<br/>`pk`: Id da Task passado na URL;<br/>**Response:** Todos os dados da Task removida.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | `/api/tasks/<pk>/finish/` | PATCH  | **Descrição:** Endpoint de finalização de Task, atribuindo as moedas ao usuário detentor da Task e finalizando-a. Caso a Task seja fixa, ela não é finalizada.<br/> **Parâmetros:**<br/>`pk`: Id da Task passado na URL:<br/> **Response:** Todos os dados da Task finalizada.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | `/api/rewards/`           | GET    | **Descrição:** Endpoint de listagem de Rewards. Só irá ser retornado as Rewards do usuário passado pelo token de acesso. Caso seja SuperUser, irá ser retornado tudo. O endpoint possui paginação.<br/> **Parâmetros:**<br/> `cost`: Inteiro; <br/>`duration`: inteiro; <br/>`search`: String de pesquisa sobre os campos `title` e `description`;<br/>`ordering`: Indicação do campo que deseja que o response seja ordenado. Pode receber os campos `cost` e `duration`. Caso seja passado "-" como prefixo do campo, ele irá ordenar de maneira inversa;<br/>`page`: Página da listagem;<br/>`page_size`: Tamanho desejado para a paginação da listagem;<br/> **Response:**<br/> `links`: Links das páginas posterior e anterior caso haja;<br/> `count`: Quantidade total de objetos da listagem; <br/>`total_pages`: Quantidade total de páginas;<br/> `results`: Lista de Rewards da página;              |
